@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const { AuthenticationError } = require('apollo-server-express');
 const { signToken } = require('../utils/auth');
+const typeDefs = require('./typeDefs');
 
 const resolvers = {
 	Query: {
@@ -24,8 +25,8 @@ const resolvers = {
 			const token = signToken(user);
 			return { token, user };
 		},
-		addUser: async (parent, args) => {
-			const userData = await User.create(args);
+		addUser: async (parent, { username, email, password }) => {
+			const userData = await User.create({ username, email, password });
 			const token = signToken(userData);
 			return { token, userData };
 		},
@@ -59,3 +60,5 @@ const resolvers = {
 		},
 	},
 };
+
+module.exports = resolvers;
